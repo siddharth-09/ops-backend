@@ -58,24 +58,7 @@ app = FastAPI(
 # Add CORS middleware for frontend integration
 app.add_middleware(
     CORSMiddleware,
-<<<<<<< HEAD
     allow_origins=["*"],
-=======
-    allow_origins=[
-        "http://localhost:5173",
-        "http://localhost:8082", 
-        "http://localhost:8081", 
-        "http://localhost:8080",
-        "http://localhost:3000", 
-        "http://127.0.0.1:5173",
-        "http://127.0.0.1:8082",
-        "http://127.0.0.1:8081",
-        "http://127.0.0.1:8080",
-        "http://127.0.0.1:3000",
-        "https://opsflow-guardian.vercel.app",
-        "https://ops-backend-production-9594.up.railway.app"
-    ],
->>>>>>> b78e970f79666fa0b788a783f347c4c2a6c9ee9d
     allow_credentials=True,
     allow_methods=["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
     allow_headers=["*"],
