@@ -174,3 +174,11 @@ async def database_status():
             ]
         }
 
+
+# Run the application when script is executed directly
+if __name__ == "__main__":
+    port = int(os.environ.get("PORT", 8000))
+    host = os.environ.get("HOST", "0.0.0.0")
+    
+    logger.info(f"Starting server on {host}:{port}")
+    uvicorn.run("main:app", host=host, port=port, log_level="info")
