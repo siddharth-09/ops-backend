@@ -22,6 +22,28 @@ logger = logging.getLogger(__name__)
 # Import database initialization
 from app.db.database import initialize_database, get_database_health
 
+# Define lifespan context manager (must be defined before app creation)
+from contextlib import asynccontextmanager
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    """Lifespan context manager for startup/shutdown events"""
+    # Startup
+    logger.info("🚀 Starting OpsFlow Guardian 2.0...")
+    
+    # Initialize database connection
+    try:
+        initialize_database()
+        logger.info("✅ Database initialization successful")
+    except Exception as e:
+        logger.error(f"❌ Database startup error: {e}")
+    
+    yield
+    
+    # Shutdown
+    logger.info("🛑 Shutting down OpsFlow Guardian 2.0...")
+    logger.info("✅ Shutdown complete")
+
 # Create FastAPI application
 app = FastAPI(
     title="OpsFlow Guardian 2.0",
@@ -29,7 +51,8 @@ app = FastAPI(
     version="2.0.0",
     docs_url="/docs",
     redoc_url="/redoc",
-    openapi_url="/openapi.json"
+    openapi_url="/openapi.json",
+    lifespan=lifespan
 )
 
 # Add CORS middleware for frontend integration
@@ -46,8 +69,8 @@ app.add_middleware(
         "http://127.0.0.1:8081",
         "http://127.0.0.1:8080",
         "http://127.0.0.1:3000",
-        "https://opsflow-guardian.vercel.app"
-        "ops-backend-production-9594.up.railway.app"
+        "https://opsflow-guardian.vercel.app",
+        "https://ops-backend-production-9594.up.railway.app"
     ],
     allow_credentials=True,
     allow_methods=["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
@@ -75,26 +98,6 @@ app.include_router(endpoints.auth.router, prefix="/api/v1/auth", tags=["Authenti
 if google_oauth_available:
     app.include_router(google_auth_router, tags=["Google Authentication"])
 app.include_router(endpoints.company.router, prefix="/api/v1", tags=["Company Profile"])
-
-
-@app.on_event("startup")
-async def startup_event():
-    """Initialize database on startup"""
-    logger.info("🚀 Starting OpsFlow Guardian 2.0...")
-    
-    # Initialize database connection
-    try:
-        initialize_database()
-        logger.info("✅ Database initialization successful")
-    except Exception as e:
-        logger.error(f"❌ Database startup error: {e}")
-
-
-@app.on_event("shutdown")
-async def shutdown_event():
-    """Clean up database connections on shutdown"""
-    logger.info("🛑 Shutting down OpsFlow Guardian 2.0...")
-    logger.info("✅ Shutdown complete")
 
 
 @app.get("/")
