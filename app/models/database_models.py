@@ -265,7 +265,6 @@ class Workflow(Base):
     
     # Metadata
     tags = Column(JSONB)
-    metadata = Column(JSONB)
     
     # Performance metrics
     total_executions = Column(Integer, default=0)
