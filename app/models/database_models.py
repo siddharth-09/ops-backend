@@ -426,7 +426,6 @@ class EmailNotification(Base):
     
     # Metadata
     smtp_response = Column(Text)
-    metadata = Column(JSONB)
     
     # Relationships
     sender = relationship("User")
