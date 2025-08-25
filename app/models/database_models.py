@@ -492,7 +492,6 @@ class AuditTrail(Base):
     event_description = Column(Text, nullable=False)
     old_values = Column(JSONB)
     new_values = Column(JSONB)
-    metadata = Column(JSONB)
     
     # Request context
     ip_address = Column(INET)
